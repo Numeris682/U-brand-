@@ -56,5 +56,5 @@ onChange={(e) => setIdea(e.target.value)}
 {logo && <img src={logo} alt="Logo généré" className="mt-4 w-64 h-64 object-contain" />}
 </main>
 );
-} 
+}
 
