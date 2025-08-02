@@ -1,60 +1,20 @@
+import './globals.css';
 
-import { useState } from 'react';
-
-export default function Home() {
-const [idea, setIdea] = useState('');
-const [name, setName] = useState('');
-const [boost, setBoost] = useState('');
-const [logo, setLogo] = useState('');
-
-const generateName = async () => {
-const res = await fetch('/api/generate', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ idea }),
-});
-const data = await res.json();
-setName(data.name);
+export const metadata = {
+  title: "U-Brand",
+  description: "Générateur de noms, logos et analyses branding IA"
 };
 
-const boostBrand = async () => {
-const res = await fetch('/api/boost', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ name, idea }),
-});
-const data = await res.json();
-setBoost(data.boost);
-};
-
-const generateLogo = async () => {
-const res = await fetch('/api/logo', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ name }),
-});
-const data = await res.json();
-setLogo(data.logo);
-};
-
-return (
-<main className="min-h-screen bg-white p-8">
-<h1 className="text-3xl font-bold mb-4">U-Brand</h1>
-<textarea
-className="w-full border p-2 mb-4"
-placeholder="Décris ton idée d'entreprise ou de marque..."
-value={idea}
-onChange={(e) => setIdea(e.target.value)}
-/>
-<button onClick={generateName} className="bg-black text-white px-4 py-2 rounded mb-2">Générer des noms</button>
-{name && <p className="mt-2 font-semibold">💡 Nom proposé : {name}</p>}
-
-<button onClick={boostBrand} className="bg-blue-600 text-white px-4 py-2 rounded mt-4 mb-2">Booster la marque</button>
-{boost && <p className="mt-2 italic">{boost}</p>}
-
-<button onClick={generateLogo} className="bg-green-600 text-white px-4 py-2 rounded mt-4 mb-2">Générer un logo</button>
-{logo && <img src={logo} alt="Logo généré" className="mt-4 w-64 h-64 object-contain" />}
-</main>
-);
-} 
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="fr">
+      <body className="bg-black text-white">
+        <nav className="bg-gray-900 p-4 flex gap-6 text-white">
+          <a href="/" className="hover:text-cyan-400">🏠 Générer Noms</a>
+          <a href="/analyze" className="hover:text-cyan-400">📊 Analyser Marque</a>
+        </nav>
+        {children}
+      </body>
+    </html>
+  );
+}
