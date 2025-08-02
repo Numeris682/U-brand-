@@ -1,18 +1,18 @@
-import { Configuration, OpenAIApi } from 'openai';
 
-const config = new Configuration({
-apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(config);
+import { NextResponse } from "next/server";
+import OpenAI from "openai";
 
-export default async function handler(req, res) {
-const { name } = req.body;
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
-const response = await openai.createImage({
-prompt: `Logo simple, professionnel, minimaliste pour une marque appelée ${name}`,
-n: 1,
-size: '512x512',
-});
+export async function POST(req: Request) {
+  const { sector, keywords } = await req.json();
+  const prompt = `Propose 15 noms créatifs et courts pour une entreprise dans le secteur "${sector}" avec les mots-clés "${keywords}". Donne uniquement les noms en liste simple.`;
 
-res.status(200).json({ logo: response.data.data[0].url });
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const names = completion.choices[0].message.content?.split("\n").filter(Boolean) || [];
+  return NextResponse.json({ names });
 }
